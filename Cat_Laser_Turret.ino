@@ -61,6 +61,11 @@ void loop() {
 void serialEvent() {
    int is_int = false;
    int y_index = -1;
+   int y = 0;
+   int x = 0;
+   int rot_x = 0;
+   int rot_y = 0;
+
 
    while (Serial.available()) {
 
@@ -78,11 +83,30 @@ void serialEvent() {
       }
    }
 
-   if (serial_str.startsWith('$')) {
-      y_index = indexOf()
 
+   if (!Serial.available())
+   {
+      /* Parse 'X<int>Y<int>'. Each <int> is three digits. */
+      if (serial_str.startsWith("$")) {
+         y_index = serial_str.indexOf("Y");
+         
+         if (y_index > 0)
+         {
+            
+            x = serial_str.substring(2, y_index).toInt();
+            y = serial_str.substring(y_index+1).toInt();
 
+            x_servo.write(x);
+            y_servo.write(y);x
+            
+            Serial.print("X:");
+            Serial.print(x);
+            Serial.print(", Y:");
+            Serial.println(y);
+         }
+      }
    }
+
 }
 
 /**
