@@ -7,6 +7,9 @@ The device will be controlled via a program on the user's PC. This program displ
 
 ## Feature Goals
 * Commands over Bluetooth
-
-
 * Get the dang thing workin'
+
+## Modules and Libraries
+* [pynput](https://github.com/moses-palmer/pynput "pynput GitHub") ([Docs](https://pynput.readthedocs.io/en/latest/ "pynput Documentation"))
+* [pySerial](https://github.com/pyserial/pyserial "pySerial GitHub") ([Docs](https://pyserial.readthedocs.io/en/latest/ "pySerial Documentation"))
+* [Arduino](https://www.arduino.cc/ "Arduino Homepage") ([Docs](https://www.arduino.cc/reference/en/ "Arduino Language Reference"))
