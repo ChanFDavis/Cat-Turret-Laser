@@ -1,6 +1,6 @@
 from pynput import mouse, keyboard
 import serial
-
+import time
 
 # Note to self: the 'with' keyword is cool! https://www.geeksforgeeks.org/with-statement-in-python/
 
@@ -12,7 +12,7 @@ TODO:
 # Output that the controller script is started.
 print('Laser turret controller started.')
 
-ser = serial.Serial('COM5', baudrate=9600, timeout=1)  # open serial port
+ser = serial.Serial('COM7', baudrate=9600, timeout=1)  # open serial port
 print(f'Communicating through serial port {ser.name}')         # check which port was really used
 
 send_coords  = False # Should mouse coordinates be sent to the arduino?
@@ -61,7 +61,10 @@ def on_move(x, y):
 
    if send_coords:
       print(f'sending: {x}, {y}')
-      ser.write(x)
+      ser.write(bytes(f'{x}', encoding='utf-8'))
+      ser.write(bytes(f'{y}', encoding='utf-8'))
+      time.sleep(0.5)
+
       send_coords = False
 
 def on_click(x, y, button, pressed):

@@ -60,7 +60,7 @@ void serialEvent() {
    while (Serial.available()) {
       read_byte = Serial.read();
 
-      Serial.println(read_byte, DEC);
+      Serial.write(read_byte);
    }
 }
 
