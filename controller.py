@@ -1,5 +1,6 @@
 from pynput import mouse, keyboard # Used to get control data from the mouse and keyboard
 import serial # Used to communicate with the arduino
+import struct # Used to pack and unpack binary data
 
 """
 TODO: 
@@ -79,6 +80,9 @@ def on_move(x, y):
    global send_coords
    global print_coords
 
+   num_bytes_written = 0
+   byte_pack = bytes() # The 'bytes' object containing the packed coordinates sent to the arduino.
+
    x_angle = mouse_coord_to_servo_angle(x, SCREEN_X)
    y_angle = mouse_coord_to_servo_angle(y, SCREEN_Y)
 
@@ -87,11 +91,25 @@ def on_move(x, y):
 
    # TODO: Move this to be done in the on_click() function.
    if send_coords:
-      print(f'sending: {x}, {y}')
-      ser.write(bytes(f'{x}', encoding='utf-8'))
-      ser.write(bytes(f'{y}', encoding='utf-8'))
-      time.sleep(0.5)
+      # Pack the mouse's current X-coordinate into a byte array where the first byte (bits 15:8) is set to 0,
+      # indicating that the value of the second byte (bits 7:0) should be sent to the X-axis servo. The second
+      # byte is a signed value representing the requested angle for the X-axis servo (between 0 and 180 degrees).
+      byte_pack = struct.pack('bB', 0, x_angle)
+      
+      # DEBUG: Write some debug output.
+      print(f'X int = {x}; X angle = {x_angle}; packed bytes object = {byte_pack}')
+      print(f'unpacked object = {struct.unpack("cB", byte_pack)}')
 
+      # Write the packed bytes to the output buffer.
+      num_bytes_written = ser.write(byte_pack)
+
+      # DEBUG: Output the number of bytes written to confirm if the bytes were sent as expected.
+      if num_bytes_written > 0:
+         print(f"Bytes written: {num_bytes_written}")
+      else:
+         print("No bytes written")
+
+      # We only want to send one set of coordinates at a time, so clear the "send coords" flag.      
       send_coords = False
 
 def on_click(x, y, button, pressed):
