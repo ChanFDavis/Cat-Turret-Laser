@@ -19,8 +19,20 @@ print('Laser turret controller started.')
 ser = serial.Serial('COM7', baudrate=9600, timeout=1)  # open serial port
 print(f'Communicating through serial port {ser.name}')         # check which port was really used
 
+# NOTE: These will be removed once the coordinates are taken from the mouse within a window, not the entire monitor.
+SCREEN_X = 2560 # Maximum resolution of the monitor for the X-axis
+SCREEN_Y = 1440 # Maximum resolution of the monitor for the Y-axis
+
 send_coords  = False # Should mouse coordinates be sent to the arduino?
 print_coords = False # Should mouse coordinates be output on move?
+
+def mouse_coord_to_servo_angle(coord, max_coord):
+   # TODO: Add docstring
+   # Translate the given mouse coordinate (between 0 and max_coord) to an angle between 0 and 180 degrees.
+   # NOTE: This can get real strange and get mouse coordinates outside of the screen bounds if you swipe the mouse quick enough.
+   # This won't be an issue once we move to using a GUI/window versus the entire monitor to track mouse movement.
+
+   return round((coord / max_coord) * 180)
 
 def on_press(key):
    # TODO: Add docstring
@@ -67,8 +79,11 @@ def on_move(x, y):
    global send_coords
    global print_coords
 
+   x_angle = mouse_coord_to_servo_angle(x, SCREEN_X)
+   y_angle = mouse_coord_to_servo_angle(y, SCREEN_Y)
+
    if print_coords:
-      print(f'{x}, {y}')
+      print(f'({x}, {y}) -> ({x_angle}, {y_angle})')
 
    # TODO: Move this to be done in the on_click() function.
    if send_coords:
