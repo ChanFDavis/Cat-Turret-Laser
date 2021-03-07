@@ -56,11 +56,36 @@ void serialEvent() {
 
    int read_byte = 0; /* The signed byte read from the RX buffer. */
 
+   // bool control_byte = true; /* Is this a control byte? (The next byte will be a value byte). */
+   bool send_x = true; /* If true, send the next byte's value to the x-axis servo; otherwise, send it to the y-axis servo. */
+   // bool control
+
    /* While data is present in the RX buffer, transfer it to the TX buffer byte by byte. */
    while (Serial.available()) {
       read_byte = Serial.read();
 
-      Serial.write(read_byte);
+      /* Check if something was actually read. */
+      if (read_byte >= 0)
+      {
+         // if (control_byte)
+         // {
+         // }
+
+         if (send_x) {
+            x_servo.write(read_byte);
+         } else {
+            y_servo.write(read_byte);
+         }
+
+         send_x = !send_x; /* Switch the servo to write the next byte to. */
+
+         // control_byte = !control_byte; /* Toggle the control byte flag. */
+      }
+
+      Serial.println(read_byte);
+
+      delay(15);
+      // Serial.write(read_byte);
    }
 }
 
