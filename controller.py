@@ -1,6 +1,7 @@
 from pynput import mouse, keyboard # Used to get control data from the mouse and keyboard
 import serial # Used to communicate with the arduino
 import struct # Used to pack and unpack binary data
+import time
 
 """
 TODO: 
@@ -91,14 +92,18 @@ def on_move(x, y):
 
    # TODO: Move this to be done in the on_click() function.
    if send_coords:
-      # Pack the mouse's current X-coordinate into a byte array where the first byte (bits 15:8) is set to 0,
-      # indicating that the value of the second byte (bits 7:0) should be sent to the X-axis servo. The second
-      # byte is a signed value representing the requested angle for the X-axis servo (between 0 and 180 degrees).
-      byte_pack = struct.pack('bB', 0, x_angle)
+      """
+         TODO: If the newer method works, update this comment.
+         Pack the mouse's current X-coordinate into a byte array where the first byte (bits 15:8) is set to 0,
+         indicating that the value of the second byte (bits 7:0) should be sent to the X-axis servo. The second
+         byte is a signed value representing the requested angle for the X-axis servo (between 0 and 180 degrees).
+      """
+
+      byte_pack = struct.pack('BB', x_angle, y_angle)
       
       # DEBUG: Write some debug output.
-      print(f'X int = {x}; X angle = {x_angle}; packed bytes object = {byte_pack}')
-      print(f'unpacked object = {struct.unpack("cB", byte_pack)}')
+      # print(f'X int = {x}; X angle = {x_angle}; packed bytes object = {byte_pack}')
+      # print(f'unpacked object = {struct.unpack("cB", byte_pack)}')
 
       # Write the packed bytes to the output buffer.
       num_bytes_written = ser.write(byte_pack)
@@ -109,20 +114,23 @@ def on_move(x, y):
       else:
          print("No bytes written")
 
+      # time.sleep(0.5)
+
       # We only want to send one set of coordinates at a time, so clear the "send coords" flag.      
-      send_coords = False
+      # send_coords = False
 
 def on_click(x, y, button, pressed):
    # TODO: Add docstring
 
    pass
 
-# Create a non-blocking mouse listener and start it.
-mouse_listener = mouse.Listener(on_move=on_move, on_click=on_click)
-mouse_listener.start()
+# Create a non-blocking keyboard listener and start it.
+key_listener = keyboard.Listener(on_press=on_press, on_release=on_release, suppress=True)
+key_listener.start()
 
-# Run a loop for a key listener
-with keyboard.Listener(on_press=on_press, on_release=on_release, suppress=True) as key_listener:
-   key_listener.join()
+# Run a loop for a mouse listener.
+with mouse.Listener(on_move=on_move, on_click=on_click) as mouse_listener:
+   mouse_listener.join()
+
 
 print('Laser turret controller ended.')
