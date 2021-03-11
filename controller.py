@@ -18,7 +18,7 @@ TODO:
 # Output that the controller script is started.
 print('Laser turret controller started.')
 
-ser = serial.Serial('COM7', baudrate=9600, timeout=1)  # open serial port
+ser = serial.Serial('COM5', baudrate=9600, timeout=1)  # open serial port
 print(f'Communicating through serial port {ser.name}')         # check which port was really used
 
 # NOTE: These will be removed once the coordinates are taken from the mouse within a window, not the entire monitor.
