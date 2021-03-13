@@ -18,7 +18,7 @@ TODO:
 # Output that the controller script is started.
 print('Laser turret controller started.')
 
-ser = serial.Serial('COM5', baudrate=9600, timeout=1)  # open serial port
+ser = serial.Serial('COM7', baudrate=9600, timeout=1)  # open serial port
 print(f'Communicating through serial port {ser.name}')         # check which port was really used
 
 # NOTE: These will be removed once the coordinates are taken from the mouse within a window, not the entire monitor.
@@ -62,9 +62,10 @@ def on_release(key):
 
    # Print all bytes in the input buffer, if any.
    # TODO: Have another thread that prints any data as it comes.
-   if key == keyboard.KeyCode().from_char('f'):
-      if ser.in_waiting > 0:
-         print(ser.read(ser.in_waiting))
+   # if key == keyboard.KeyCode().from_char('f'):
+
+      # if ser.in_waiting > 0:
+         # print(ser.read(ser.in_waiting))
 
    # Place mouse coordinates (currently, just X) in the output buffer.
    if key == keyboard.Key.space:

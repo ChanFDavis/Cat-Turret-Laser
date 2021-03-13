@@ -78,13 +78,12 @@ void serialEvent() {
          }
 
          send_x = !send_x; /* Switch the servo to write the next byte to. */
-
          // control_byte = !control_byte; /* Toggle the control byte flag. */
       }
 
-      Serial.println(read_byte);
+      // Serial.println(read_byte);
 
-      delay(15);
+      // delay(15);
       // Serial.write(read_byte);
    }
 }
