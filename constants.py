@@ -8,6 +8,8 @@ TIMEOUT = 1
 SCREEN_X = 2560 # Maximum resolution of the monitor for the X-axis
 SCREEN_Y = 1440 # Maximum resolution of the monitor for the Y-axis
 
+WRITE_DELAY = 15 # Delay (in milliseconds) of when data can be written to the arduino in 'on_move' function.
+
 
 
 

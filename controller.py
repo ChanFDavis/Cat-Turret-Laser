@@ -1,6 +1,10 @@
 from pynput import mouse, keyboard # Used to get control data from the mouse and keyboard.
-import serial  # Used to communicate with the arduino.
-import struct  # Used to pack and unpack binary data.
+
+import serial     # Used to communicate with the arduino.
+import struct     # Used to pack and unpack binary data.
+import time       # Used to delay the sending of data to the arduino.
+
+# NOTE: This is a local file that defines variables referenced in this file that are used for configuration (port, baudrate, etc.).
 import constants
 
 """
@@ -22,8 +26,12 @@ print('Laser turret controller started.')
 ser = serial.Serial(constants.PORT, baudrate=constants.BAUD_RATE, timeout=constants.TIMEOUT)  # open serial port
 print(f'Communicating through serial port {ser.name}')         # check which port was really used
 
+# Global variables
 send_coords  = False # Should mouse coordinates be sent to the arduino?
 print_coords = False # Should mouse coordinates be output on move?
+
+curr_time    = time.time_ns() # Used for delays when sending data to the arduino.
+last_time    = curr_time # TODO: Find a better way to get this so that it's only initialized with a default value once in the 'on_move' function.
 
 def mouse_coord_to_servo_angle(coord, max_coord):
    # TODO: Add docstring
@@ -80,6 +88,13 @@ def on_move(x, y):
    global send_coords
    global print_coords
 
+   # Timer used for delays
+   global last_time
+   global curr_time
+
+   # Update the current time.
+   curr_time = time.time_ns()
+
    num_bytes_written = 0 # DEBUG: The number of bytes written to the arduino.
    byte_pack = bytes() # The 'bytes' object containing the packed coordinates sent to the arduino.
 
@@ -92,13 +107,12 @@ def on_move(x, y):
       print(f'({x}, {y}) -> ({x_angle}, {y_angle})')
 
    # Send the mouse's X and Y coordinates to the arduino if flag is enabled.
-   if send_coords:
-
+   if send_coords and ((curr_time - last_time) >= constants.WRITE_DELAY):
       # Pack the converted X/Y coordinate data into a byte array of two unsigned bytes.
       byte_pack = struct.pack('BB', x_angle, y_angle)
 
-      # DEBUG: Write some debug output.
       # TODO: Add runtime arguments/flags to enable/disable debug messages.
+      # DEBUG: Write some debug output.
       # print(f'X int = {x}; X angle = {x_angle}; packed bytes object = {byte_pack}')
       # print(f'unpacked object = {struct.unpack("cB", byte_pack)}')
 
@@ -111,7 +125,8 @@ def on_move(x, y):
       else:
          print("DEBUG: No bytes written")
 
-
+      last_time = curr_time
+         
 def on_click(x, y, button, pressed):
    # TODO: Add docstring or remove if not used in the end.
    pass
