@@ -53,10 +53,9 @@ void serialEvent() {
          }
 
          send_x = !send_x; /* Switch which servo the next byte will be written to. */
-         Serial.println(send_x);
       }
 
       /* TODO: Add reading of control bytes to allow toggling of flags via commands from the controller script. */
-      Serial.println(read_byte);
+      // Serial.println(read_byte);
    }
 }
