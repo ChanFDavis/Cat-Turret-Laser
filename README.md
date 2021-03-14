@@ -5,6 +5,18 @@ The goal of this project is to create a device that enables the user to play wit
 
 The device will be controlled via a program on the user's PC. This program displays a window that tracks the X and Y coordinates of the user's mouse when it is hovering within the bounds of the window. These coordinates are translated to angles for the device's X and Y rotation, which are then sent to the device. On the device end, upon receiving a signal from the PC, the device parses the incoming rotation data and performs the appropriate rotation. The laser will initially be off until the user clicks their mouse within the PC program's window - at which point the laser will turn on.
 
+## Requirements
+
+**ATTENTION!**
+
+You must create a file in the same directory as controller.py and define the following variables with the correct values for your hardware setup. Example values are also shown in the list:
+
+* `PORT` = 'COM7'
+* `BAUD_RATE` = 9600
+* `TIMEOUT` = 1
+* `SCREEN_X` = 2560
+* `SCREEN_Y` = 1440 
+
 ## Feature Goals
 * Commands over Bluetooth
 * Get the dang thing workin'

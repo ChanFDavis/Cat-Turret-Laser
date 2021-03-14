@@ -1,6 +1,7 @@
 from pynput import mouse, keyboard # Used to get control data from the mouse and keyboard.
 import serial  # Used to communicate with the arduino.
 import struct  # Used to pack and unpack binary data.
+import constants
 
 """
 TODO:
@@ -18,12 +19,8 @@ TODO:
 # Output that the controller script is started.
 print('Laser turret controller started.')
 
-ser = serial.Serial('COM7', baudrate=9600, timeout=1)  # open serial port
+ser = serial.Serial(constants.PORT, baudrate=constants.BAUD_RATE, timeout=constants.TIMEOUT)  # open serial port
 print(f'Communicating through serial port {ser.name}')         # check which port was really used
-
-# NOTE: These will be removed once the coordinates are taken from the mouse within a window, not the entire monitor.
-SCREEN_X = 2560 # Maximum resolution of the monitor for the X-axis
-SCREEN_Y = 1440 # Maximum resolution of the monitor for the Y-axis
 
 send_coords  = False # Should mouse coordinates be sent to the arduino?
 print_coords = False # Should mouse coordinates be output on move?
@@ -87,8 +84,8 @@ def on_move(x, y):
    byte_pack = bytes() # The 'bytes' object containing the packed coordinates sent to the arduino.
 
    """ Convert the X and Y coordinates w.r.t to the container (currently the monitor) into angles between 0 and 180 degrees. """
-   x_angle = mouse_coord_to_servo_angle(x, SCREEN_X)
-   y_angle = mouse_coord_to_servo_angle(y, SCREEN_Y)
+   x_angle = mouse_coord_to_servo_angle(x, constants.SCREEN_X)
+   y_angle = mouse_coord_to_servo_angle(y, constants.SCREEN_Y)
 
    # Output the mouse's X and Y coordinates if flag is enabled.
    if print_coords:
