@@ -9,14 +9,15 @@ void setup() {
    x_servo.attach(8); 
    y_servo.attach(7);
 
-   pinMode(5, OUTPUT);
+   /* Set the mode of the laser diode pin and turn on the laser. */
+   pinMode(12, OUTPUT);
+   digitalWrite(12, HIGH);
 
    Serial.begin(9600); /* Set the baud rate. */
-   Serial.println("Serial connection established.");
 
-   while (!Serial) {
-      /* Wait for serial port to connect. Needed for native USB. */
-   }
+   Serial.println("Serial connection established."); /* Send a success message. */
+
+   while (!Serial) { /* Wait for serial port to connect. Needed for native USB. */ }
 }
 
 void loop() { /* Do nothing. */ }
@@ -31,31 +32,19 @@ void loop() { /* Do nothing. */ }
    Credits: The SerialEvent.io example file from the Arduino IDE.
 */
 void serialEvent() {
-   int read_byte = 0; /* The unsigned byte read from the RX buffer. */
+   size_t bytes_read = 0;  /* The number of bytes read from the RX buffer. */
+   byte byte_arr[2] = {0}; /* Byte array containing the x-axis and y-axis rotation values read from the RX buffer. */
 
-
-   // bool control_byte = true; /* Is this a control byte? (The next byte will be a value byte). */
-   bool send_x = true; /* If true, send the next byte's value to the x-axis servo; otherwise, send it to the y-axis servo. */
-   // bool control
-
-   /* While data is present in the RX buffer, transfer it to the TX buffer byte by byte. */
    while (Serial.available()) {
-      read_byte = Serial.read();
+      /* Read the rotation data from the RX buffer. */
+      bytes_read = Serial.readBytes(byte_arr, 2);
 
       /* Check if something was actually read. */
-      if (read_byte >= 0)
-      {
-         /* If byte was successfully read, write it to either the X or Y servo. */
-         if (send_x) {
-            x_servo.write(read_byte);
-         } else {
-            y_servo.write(read_byte);
-         }
+      if (bytes_read >= 0) {
 
-         send_x = !send_x; /* Switch which servo the next byte will be written to. */
+         /* If bytes were successfully read, write the first byte to the x-axis servo and the second byte to the y-axis servo. */
+         x_servo.write(180 - byte_arr[0]); /* Account for reverse rotation direction. */
+         y_servo.write(byte_arr[1]);
       }
-
-      /* TODO: Add reading of control bytes to allow toggling of flags via commands from the controller script. */
-      // Serial.println(read_byte);
    }
 }
