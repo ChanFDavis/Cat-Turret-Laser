@@ -30,8 +30,9 @@ print(f'Communicating through serial port {ser.name}')         # check which por
 send_coords  = False # Should mouse coordinates be sent to the arduino?
 print_coords = False # Should mouse coordinates be output on move?
 
-curr_time    = time.time_ns() # Used for delays when sending data to the arduino.
-last_time    = curr_time # TODO: Find a better way to get this so that it's only initialized with a default value once in the 'on_move' function.
+# Used for delays when sending data to the arduino.
+curr_time    = time.time_ns()
+last_time    = curr_time
 
 def mouse_coord_to_servo_angle(coord, max_coord):
    # TODO: Add docstring
@@ -68,8 +69,7 @@ def on_release(key):
 
    # TODO: Have another thread that prints any data as it comes.
    # Print all bytes in the input buffer, if any.
-   if key == keyboard.KeyCode().from_char('f'):
-      if ser.in_waiting > 0:
+   if key == keyboard.KeyCode().from_char('f') and ser.in_waiting > 0:
          print(ser.read(ser.in_waiting))
 
    # Toggle flag to place mouse coordinates in the output buffer to the arduino.
@@ -106,8 +106,8 @@ def on_move(x, y):
    if print_coords:
       print(f'({x}, {y}) -> ({x_angle}, {y_angle})')
 
-   # Send the mouse's X and Y coordinates to the arduino if flag is enabled.
-   if send_coords and ((curr_time - last_time) >= constants.WRITE_DELAY):
+   # Send the mouse's X and Y coordinates to the arduino if flag is enabled and the specified delay time has been hit.
+   if send_coords and ((curr_time - last_time) >= (constants.WRITE_DELAY * 1000000)):
       # Pack the converted X/Y coordinate data into a byte array of two unsigned bytes.
       byte_pack = struct.pack('BB', x_angle, y_angle)
 
@@ -125,8 +125,8 @@ def on_move(x, y):
       else:
          print("DEBUG: No bytes written")
 
-      last_time = curr_time
-         
+      last_time = time.time_ns() # Save time of function exit.
+
 def on_click(x, y, button, pressed):
    # TODO: Add docstring or remove if not used in the end.
    pass
