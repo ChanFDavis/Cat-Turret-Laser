@@ -32,19 +32,21 @@ void loop() { /* Do nothing. */ }
    Credits: The SerialEvent.io example file from the Arduino IDE.
 */
 void serialEvent() {
-   size_t bytes_read = 0;  /* The number of bytes read from the RX buffer. */
-   byte byte_arr[2] = {0}; /* Byte array containing the x-axis and y-axis rotation values read from the RX buffer. */
+   size_t bytes_read = 0;     /* The number of bytes read from the RX buffer. */
+   byte byte_arr[4] = {0};    /* Byte array containing the x-axis and y-axis rotation values read from the RX buffer. */
 
    while (Serial.available()) {
       /* Read the rotation data from the RX buffer. */
-      bytes_read = Serial.readBytes(byte_arr, 2);
+      bytes_read = Serial.readBytes(byte_arr, 4);
 
       /* Check if something was actually read. */
-      if (bytes_read >= 0) {
+      if (bytes_read >= 4) {
 
-         /* If bytes were successfully read, write the first byte to the x-axis servo and the second byte to the y-axis servo. */
-         x_servo.write(180 - byte_arr[0]); /* Account for reverse rotation direction. */
-         y_servo.write(byte_arr[1]);
+         /* If bytes were successfully read, write the first and second bytes to the x-axis servo, and the third and fourth bytes to the y-axis servo. */
+
+         // x_servo.writeMicroseconds(MAX_SERVO_MS - ((byte_arr[1] << 8) | byte_arr[0])); /* Account for reverse rotation direction. */
+         x_servo.writeMicroseconds(3000 - ((byte_arr[1] << 8) | byte_arr[0])); /* Account for reverse rotation direction. */
+         y_servo.writeMicroseconds(((byte_arr[3] << 8) | byte_arr[2]));
       }
    }
 }

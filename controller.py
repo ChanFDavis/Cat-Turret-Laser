@@ -37,11 +37,11 @@ last_time    = curr_time
 def mouse_coord_to_servo_angle(coord, max_coord):
    # TODO: Add docstring
 
-   # Translate the given mouse coordinate (between 0 and max_coord) to an angle between 0 and 180 degrees.
+   # Translate the given mouse coordinate (between 0 and max_coord) to value between the minimum and maximum servo shaft angle, in microseconds.
    # FIXME: This can get real strange and get mouse coordinates outside of the screen bounds if you swipe the mouse quick enough.
    # This won't be an issue once we move to using a GUI/window versus the entire monitor to track mouse movement.
 
-   return round((coord / max_coord) * 180)
+   return (round((coord * (constants.MAX_SERVO_ROT_US - constants.MIN_SERVO_ROT_US)) / max_coord) + constants.MIN_SERVO_ROT_US)
 
 def on_press(key):
    # TODO: Add docstring
@@ -98,7 +98,7 @@ def on_move(x, y):
    num_bytes_written = 0 # DEBUG: The number of bytes written to the arduino.
    byte_pack = bytes() # The 'bytes' object containing the packed coordinates sent to the arduino.
 
-   """ Convert the X and Y coordinates w.r.t to the container (currently the monitor) into angles between 0 and 180 degrees. """
+   # Convert the X and Y coordinates w.r.t to the container (currently the monitor) into servo shaft angles, in milliseconds.
    x_angle = mouse_coord_to_servo_angle(x, constants.SCREEN_X)
    y_angle = mouse_coord_to_servo_angle(y, constants.SCREEN_Y)
 
@@ -108,8 +108,9 @@ def on_move(x, y):
 
    # Send the mouse's X and Y coordinates to the arduino if flag is enabled and the specified delay time has been hit.
    if send_coords and ((curr_time - last_time) >= (constants.WRITE_DELAY * 1000000)):
-      # Pack the converted X/Y coordinate data into a byte array of two unsigned bytes.
-      byte_pack = struct.pack('BB', x_angle, y_angle)
+
+      # Pack the converted X/Y coordinate data into a byte array of two unsigned shorts.
+      byte_pack = struct.pack('HH', x_angle, y_angle)
 
       # TODO: Add runtime arguments/flags to enable/disable debug messages.
       # DEBUG: Write some debug output.
