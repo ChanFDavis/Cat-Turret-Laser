@@ -15,7 +15,7 @@ You must create a file in the same directory as controller.py and define the fol
 * `BAUD_RATE` = 9600
 * `TIMEOUT` = 1
 * `SCREEN_X` = 2560
-* `SCREEN_Y` = 1440 
+* `SCREEN_Y` = 1440
 
 ## Feature Goals
 * Commands over Bluetooth
