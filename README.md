@@ -25,3 +25,4 @@ You must create a file in the same directory as controller.py and define the fol
 * [pynput](https://github.com/moses-palmer/pynput "pynput GitHub") ([Docs](https://pynput.readthedocs.io/en/latest/ "pynput Documentation"))
 * [pySerial](https://github.com/pyserial/pyserial "pySerial GitHub") ([Docs](https://pyserial.readthedocs.io/en/latest/ "pySerial Documentation"))
 * [Arduino](https://www.arduino.cc/ "Arduino Homepage") ([Docs](https://www.arduino.cc/reference/en/ "Arduino Language Reference"))
+* Dev Microcontroller - KeyWish BLE Nano ([GitHub](https://github.com/keywish/keywish-nano-plus/tree/master/BLE-Nano))
