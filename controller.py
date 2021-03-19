@@ -1,3 +1,5 @@
+# TODO: Add shebang
+
 from pynput import mouse, keyboard # Used to get control data from the mouse and keyboard.
 
 import serial     # Used to communicate with the arduino.
@@ -14,7 +16,6 @@ TODO:
    Create GUI window and have controls be obtain via the mouse coords w.r.t. the window's bounds
    Hook up a camera to the turret and get the feed to the GUI
    Add controlling over bluetooth connection
-   Automatic detection of the proper COM port - add constants file or something
    Add sending of control bytes to allow toggling of flags via commands from the controller script.
 
    Structure this source code file better (AFTER the basic writing of control data functionality is implemented and BEFORE implementing the GUI stuff)
