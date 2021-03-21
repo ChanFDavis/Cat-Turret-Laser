@@ -5,7 +5,7 @@ import struct     # Used to pack and unpack binary data.
 import time       # Used to delay the sending of data to the arduino.
 
 # NOTE: This is a local file that defines variables referenced in this file that are used for configuration (port, baudrate, etc.).
-import constants
+import python_constants as constants
 
 """
 TODO:
