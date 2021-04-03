@@ -41,7 +41,7 @@ def mouse_coord_to_servo_angle(coord, max_coord):
    # FIXME: This can get real strange and get mouse coordinates outside of the screen bounds if you swipe the mouse quick enough.
    # This won't be an issue once we move to using a GUI/window versus the entire monitor to track mouse movement.
 
-   return (round((coord * (constants.MAX_SERVO_ROT_US - constants.MIN_SERVO_ROT_US)) / max_coord) + constants.MIN_SERVO_ROT_US)
+   return (round((abs(coord) * (constants.MAX_SERVO_ROT_US - constants.MIN_SERVO_ROT_US)) / max_coord) + constants.MIN_SERVO_ROT_US)
 
 def on_press(key):
    # TODO: Add docstring
