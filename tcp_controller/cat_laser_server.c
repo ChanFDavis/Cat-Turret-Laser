@@ -44,9 +44,9 @@ int main(void) {
    /* Populate the server address structure with the correct information. */
    server_addr.sin_family = AF_INET; /* Internet domain sockets address family (IPv4). */
    server_addr.sin_port = htons(PORT); /* Convert port number (short) from host byte order to network byte order. */
-   server_addr.sin_addr.s_addr = htonl(INADDR_ANY);  /* Local host address (long) converted from host byte order to network byte order. */
+   server_addr.sin_addr.s_addr = inet_addr(SERVER_IP);  /* Local host address (long) converted from host byte order to network byte order. */
 
-   /* Bind the socket to our sever's address. If unsuccessful, exit with error message. */
+   /* Bind the socket to our server's address. If unsuccessful, exit with error message. */
 	if (bind(sock_fd, (struct sockaddr *) &server_addr, sizeof(server_addr)) < 0) {
 	   error("ERROR: Error binding the server socket");
    }
@@ -88,7 +88,6 @@ int main(void) {
                error("ERROR: Error closing client socket.");
             }
 
-            // exit(0); /* If socket closure was successful, exit the program with 'normal' status code. */
             break; /* If socket closure was successful, exit the program with 'normal' status code. */
          }
 
