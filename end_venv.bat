@@ -1,0 +1,3 @@
+@echo off
+echo Deactivating venv...
+.\venv\Scripts\deactivate.bat
